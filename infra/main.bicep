@@ -1,3 +1,10 @@
+@secure()
+
+param adminPassword string
+param adminUsername string = 'azureuser'
+
+param vmSize string = 'Standard_B2s'
+
 param location string = 'eastus'
 param environment string = 'dev'
 
@@ -39,6 +46,28 @@ module network './modules/network.bicep' = {
     webNsgId: nsg.outputs.nsgId
   }
 }
+
+module nic './modules/nic.bicep' = {
+  name: 'nic-${environment}-vm01'
+  params: {
+    location: location
+    nicName: 'nic-${environment}-vm01'
+    subnetId: network.outputs.webSubnetId
+  }
+}
+
+module vm './modules/vm.bicep' = {
+  name: 'vm-${environment}-01'
+  params: {
+    location: location
+    vmName: 'vm-${environment}-01'
+    nicId: nic.outputs.nicId
+    adminUsername: adminUsername
+    adminPassword: adminPassword
+    vmSize: vmSize
+  }
+}
+
 
 output vnetId string = network.outputs.vnetId
 output webSubnetId string = network.outputs.webSubnetId
