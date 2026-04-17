@@ -99,6 +99,25 @@ module appGateway './modules/app_gateway.bicep' = {
     backendNicId: nic.outputs.nicId
 
   }
+module sql './modules/sql.bicep' = {
+
+  name: 'sql-${environment}'
+
+  params: {
+
+    location: location
+
+    sqlServerName: 'sql-${environment}'
+
+    adminUsername: adminUsername
+
+    adminPassword: adminPassword
+
+    dbName: 'appdb'
+
+  }
+
+}
 
 }
 
