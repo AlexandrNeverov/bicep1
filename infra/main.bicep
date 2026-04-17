@@ -5,7 +5,7 @@ param adminUsername string = 'azureuser'
 
 param vmSize string = 'Standard_D2s_v3'
 
-param location string = 'eastus'
+param location string = 'centralus'
 param environment string = 'dev'
 
 param allowedSshSource string = '*'
