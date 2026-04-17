@@ -3,7 +3,7 @@
 param adminPassword string
 param adminUsername string = 'azureuser'
 
-param vmSize string = 'Standard_B2s'
+param vmSize string = 'Standard_D2s_v3'
 
 param location string = 'eastus'
 param environment string = 'dev'
@@ -19,7 +19,7 @@ param webSubnetPrefix string = '10.0.1.0/24'
 param dbSubnetName string = 'db-subnet'
 param dbSubnetPrefix string = '10.0.2.0/24'
 
-param gatewaySubnetName string = 'GatewaySubnet'
+param gatewaySubnetName string = 'appgw'
 param gatewaySubnetPrefix string = '10.0.3.0/24'
 
 module nsg './modules/nsg.bicep' = {

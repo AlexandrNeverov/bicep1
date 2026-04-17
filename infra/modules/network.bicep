@@ -8,7 +8,7 @@ param webSubnetPrefix string
 param dbSubnetName string
 param dbSubnetPrefix string
 
-param gatewaySubnetName string = 'GatewaySubnet'
+param gatewaySubnetName string = 'appgw'
 param gatewaySubnetPrefix string = '10.0.3.0/24'
 
 param webNsgId string
