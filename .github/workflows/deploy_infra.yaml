@@ -33,6 +33,12 @@ jobs:
       - name: Install Bicep
         run: az bicep install
 
+      - name: Ensure Resource Group
+        run: |
+          az group create \
+            --name $RESOURCE_GROUP \
+            --location centralus
+
       - name: Deploy Bicep
         run: |
           az deployment group create \
