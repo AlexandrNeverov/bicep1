@@ -87,6 +87,8 @@ jobs:
             --resource-group "$TARGET_RG" \
             --template-file "$TEMPLATE_FILE" \
             --parameters @"$PARAM_FILE" \
+            adminUsername="${{ secrets.ADMIN_USERNAME }}" \
+            adminPassword="${{ secrets.ADMIN_PASSWORD }}" \
             --no-pretty-print \
             --output json > whatif.json
 
@@ -109,7 +111,9 @@ jobs:
           az deployment group create \
             --resource-group "$TARGET_RG" \
             --template-file "$TEMPLATE_FILE" \
-            --parameters @"$PARAM_FILE"
+            --parameters @"$PARAM_FILE" \
+            adminUsername="${{ secrets.ADMIN_USERNAME }}" \
+            adminPassword="${{ secrets.ADMIN_PASSWORD }}"
 
       # ------------------------------------------------------------
       # Planned next steps (next iterations of the pipeline)
