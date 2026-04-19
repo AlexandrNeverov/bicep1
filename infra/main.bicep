@@ -22,7 +22,7 @@ param vmName string = 'vm-${environment}-01'
 @secure()
 param adminPassword string
 param adminUsername string
-param vmSize string = 'Standard_B2s'
+param vmSize string = 'Standard_B1s'
 
 module network './modules/network.bicep' = {
   name: 'network-${environment}'
