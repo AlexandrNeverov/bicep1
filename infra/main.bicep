@@ -13,6 +13,9 @@ param dbSubnetPrefix string = '10.0.2.0/24'
 param gatewaySubnetName string = 'appgw'
 param gatewaySubnetPrefix string = '10.0.3.0/24'
 
+param nsgName string = 'web-nsg-${environment}'
+param allowedSshSource string = '*'
+
 module network './modules/network.bicep' = {
   name: 'network-${environment}'
   params: {
@@ -27,5 +30,15 @@ module network './modules/network.bicep' = {
     gatewaySubnetPrefix: gatewaySubnetPrefix
   }
 }
-
+module nsg './modules/nsg.bicep' = {
+  name: 'nsg-${environment}'
+  params: {
+    location: location
+    nsgName: nsgName
+    allowedSshSource: allowedSshSource
+  }
+  dependsOn: [
+    network
+  ]
+}
 output vnetId string = network.outputs.vnetId

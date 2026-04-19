@@ -7,6 +7,9 @@
     },
     "environment": {
       "value": "prod"
+    },
+    "allowedSshSource": {
+      "value": "*"
     }
   }
 }
