@@ -27,11 +27,11 @@ resource sqlDb 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
 }
 
 resource firewall 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
-  name: 'AllowAll'
+  name: 'AllowAzureServices'
   parent: sqlServer
   properties: {
     startIpAddress: '0.0.0.0'
-    endIpAddress: '255.255.255.255'
+    endIpAddress: '0.0.0.0'
   }
 }
 

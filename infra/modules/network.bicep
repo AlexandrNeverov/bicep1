@@ -45,3 +45,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
 
 output vnetId string = vnet.id
 output webSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, webSubnetName)
+output dbSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, dbSubnetName)
+output gatewaySubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, gatewaySubnetName)
+

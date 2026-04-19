@@ -20,6 +20,11 @@ jobs:
       PARAM_FILE: ${{ vars.PARAM_FILE }}
       TARGET_RG: ${{ vars.TARGET_RG }}
 
+      ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      SQL_ADMIN_USERNAME: ${{ secrets.SQL_ADMIN_USERNAME }}
+      SQL_ADMIN_PASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,8 +81,10 @@ jobs:
             --resource-group "$TARGET_RG" \
             --template-file "$TEMPLATE_FILE" \
             --parameters @"$PARAM_FILE" \
-            adminUsername="${{ secrets.ADMIN_USERNAME }}" \
-            adminPassword="${{ secrets.ADMIN_PASSWORD }}"
+            adminUsername="$ADMIN_USERNAME" \
+            adminPassword="$ADMIN_PASSWORD" \
+            sqlAdminUsername="$SQL_ADMIN_USERNAME" \
+            sqlAdminPassword="$SQL_ADMIN_PASSWORD"
 
       # 2.5 Task: "What-if" => Final preview before deployment
       # SOC2: CC3.2, CC4.1 (Change impact analysis + monitoring input)
@@ -87,8 +94,10 @@ jobs:
             --resource-group "$TARGET_RG" \
             --template-file "$TEMPLATE_FILE" \
             --parameters @"$PARAM_FILE" \
-            adminUsername="${{ secrets.ADMIN_USERNAME }}" \
-            adminPassword="${{ secrets.ADMIN_PASSWORD }}" \
+            adminUsername="$ADMIN_USERNAME" \
+            adminPassword="$ADMIN_PASSWORD" \
+            sqlAdminUsername="$SQL_ADMIN_USERNAME" \
+            sqlAdminPassword="$SQL_ADMIN_PASSWORD" \
             --no-pretty-print \
             --output json > whatif.json
 
@@ -112,8 +121,10 @@ jobs:
             --resource-group "$TARGET_RG" \
             --template-file "$TEMPLATE_FILE" \
             --parameters @"$PARAM_FILE" \
-            adminUsername="${{ secrets.ADMIN_USERNAME }}" \
-            adminPassword="${{ secrets.ADMIN_PASSWORD }}"
+            adminUsername="$ADMIN_USERNAME" \
+            adminPassword="$ADMIN_PASSWORD" \
+            sqlAdminUsername="$SQL_ADMIN_USERNAME" \
+            sqlAdminPassword="$SQL_ADMIN_PASSWORD"
 
       # ------------------------------------------------------------
       # Planned next steps (next iterations of the pipeline)
