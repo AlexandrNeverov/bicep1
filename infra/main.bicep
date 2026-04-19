@@ -24,7 +24,7 @@ param adminUsername string
 @secure()
 param adminPassword string
 
-param vmSize string = 'Standard_B1s'
+param vmSize string = 'Standard_NV4as_v4'
 
 param sqlServerName string = 'neverov-sql-${environment}'
 param dbName string = 'appdb'
