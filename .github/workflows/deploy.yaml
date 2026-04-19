@@ -75,7 +75,7 @@ jobs:
           az deployment group validate \
             --resource-group "$TARGET_RG" \
             --template-file "$TEMPLATE_FILE" \
-            --parameters @"$PARAM_FILE"
+            --parameters @"$PARAM_FILE" \
             adminUsername="${{ secrets.ADMIN_USERNAME }}" \
             adminPassword="${{ secrets.ADMIN_PASSWORD }}"
 
