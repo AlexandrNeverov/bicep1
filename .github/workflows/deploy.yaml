@@ -76,6 +76,8 @@ jobs:
             --resource-group "$TARGET_RG" \
             --template-file "$TEMPLATE_FILE" \
             --parameters @"$PARAM_FILE"
+            adminUsername="${{ secrets.ADMIN_USERNAME }}" \
+            adminPassword="${{ secrets.ADMIN_PASSWORD }}"
 
       # 2.5 Task: "What-if" => Final preview before deployment
       # SOC2: CC3.2, CC4.1 (Change impact analysis + monitoring input)

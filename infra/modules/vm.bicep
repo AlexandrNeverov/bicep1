@@ -5,7 +5,7 @@ param nicId string
 @secure()
 param adminPassword string
 
-param adminUsername string = 'azureuser'
+param adminUsername string
 param vmSize string = 'Standard_B2s'
 
 resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {

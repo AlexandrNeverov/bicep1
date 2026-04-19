@@ -17,6 +17,12 @@ param nsgName string = 'web-nsg-${environment}'
 param allowedSshSource string = '*'
 
 param nicName string = 'nic-${environment}-vm01'
+param vmName string = 'vm-${environment}-01'
+
+@secure()
+param adminPassword string
+param adminUsername string
+param vmSize string = 'Standard_B2s'
 
 module network './modules/network.bicep' = {
   name: 'network-${environment}'
@@ -32,6 +38,7 @@ module network './modules/network.bicep' = {
     gatewaySubnetPrefix: gatewaySubnetPrefix
   }
 }
+
 module nsg './modules/nsg.bicep' = {
   name: 'nsg-${environment}'
   params: {
@@ -63,9 +70,32 @@ module nic './modules/nic.bicep' = {
     subnetId: network.outputs.webSubnetId
     publicIpId: publicIp.outputs.publicIpId
   }
+  dependsOn: [
+    network
+    publicIp
+  ]
+}
+
+module vm './modules/vm.bicep' = {
+  name: 'vm-${environment}'
+  params: {
+    location: location
+    vmName: vmName
+    nicId: nic.outputs.nicId
+    adminUsername: adminUsername
+    adminPassword: adminPassword
+    vmSize: vmSize
+  }
+  dependsOn: [
+      network
+      nsg
+      publicIp
+      nic
+  ]
 }
 
 output vnetId string = network.outputs.vnetId
 output nsgId string = nsg.outputs.nsgId
-output nicId string = nic.outputs.nicId
 output publicIpId string = publicIp.outputs.publicIpId
+output nicId string = nic.outputs.nicId
+output vmId string = vm.outputs.vmId
