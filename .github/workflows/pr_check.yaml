@@ -3,6 +3,10 @@ name: PR Checks
 on:
   pull_request:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   pr-validation:
     runs-on: ubuntu-latest
