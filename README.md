@@ -25,10 +25,21 @@ The architecture is designed to be extendable and serves as a baseline for furth
 ## Architecture
 
 <p align="center">
-  <img src="arch.jpg" width="900">
+  <img src="Upload%20files/arch.jpg" width="900">
 </p>
+
 <p align="center">
   <i>Figure 1: Infrastructure Architecture with Future Extensions</i>
+</p>
+
+## CI/CD Workflow
+
+<p align="center">
+  <img src="Upload%20files/pipe.png" width="900">
+</p>
+
+<p align="center">
+  <i>Figure 2: CI/CD Pipeline with Approval and Validation Stages</i>
 </p>
 
 ---
