@@ -29,7 +29,7 @@ The architecture is designed to be extendable and serves as a baseline for furth
 </p>
 
 <p align="center">
-  <i>Figure 2: CI/CD Pipeline with Approval and Validation Stages</i>
+  <i>Figure 1: Infrastructure Architecture with Future Extensions</i>
 </p>
 
 
@@ -40,7 +40,7 @@ The architecture is designed to be extendable and serves as a baseline for furth
 </p>
 
 <p align="center">
-  <i>Figure 1: Infrastructure Architecture with Future Extensions</i>
+  <i>Figure 2: CI/CD Pipeline with Approval and Validation Stages</i> 
 </p>
 
 ---
