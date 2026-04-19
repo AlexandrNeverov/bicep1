@@ -1,6 +1,7 @@
 param location string
 param nicName string
 param subnetId string
+param publicIpId string
 
 resource nic 'Microsoft.Network/networkInterfaces@2023-09-01' = {
   name: nicName
@@ -14,6 +15,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-09-01' = {
             id: subnetId
           }
           privateIPAllocationMethod: 'Dynamic'
+          publicIPAddress: {
+            id: publicIpId
+          }
         }
       }
     ]
