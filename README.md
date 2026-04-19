@@ -58,15 +58,6 @@ The main steps are:
 
 Infrastructure changes are applied only through CI, ensuring control and consistency.
 
-## CI/CD Workflow
-
-<p align="center">
-  <img src="pipe.png" width="900">
-</p>
-<p align="center">
-  <i>Figure 2: CI/CD Pipeline with Approval and Validation Stages</i>
-</p>
-
 ---
 
 ## Security
