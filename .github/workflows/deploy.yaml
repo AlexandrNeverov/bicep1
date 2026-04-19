@@ -1,0 +1,135 @@
+name: Deploy Infra
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    env:
+      TEMPLATE_FILE: ${{ vars.TEMPLATE_FILE }}
+      PARAM_FILE: ${{ vars.PARAM_FILE }}
+      TARGET_RG: ${{ vars.TARGET_RG }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2.1 Task: "Env sanity" => Ensure correct environment, RG, params
+      # SOC2: CC3.2, CC5.1 (Environment validation + risk prevention)
+      - name: Environment sanity check
+        run: |
+          test -n "$TEMPLATE_FILE"
+          test -n "$PARAM_FILE"
+          test -n "$TARGET_RG"
+
+          test -f "$TEMPLATE_FILE"
+          test -f "$PARAM_FILE"
+
+          jq empty "$PARAM_FILE" > /dev/null
+
+          ENVIRONMENT=$(jq -r '.parameters.environment.value' "$PARAM_FILE")
+          LOCATION=$(jq -r '.parameters.location.value' "$PARAM_FILE")
+
+          case "$ENVIRONMENT" in
+            dev|staging|prod) ;;
+            *)
+              echo "Invalid environment: $ENVIRONMENT"
+              exit 1
+              ;;
+          esac
+
+          test -n "$LOCATION"
+
+      # 2.2 Task: "Azure login" => Authenticate to Azure
+      # SOC2: CC6.1, CC6.2 (Authentication + identity control)
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # 2.3 Task: "Ensure RG" => Ensure resource group exists
+      # SOC2: CC5.2 (Infrastructure provisioning control)
+      - name: Ensure resource group exists
+        run: |
+          LOCATION=$(jq -r '.parameters.location.value' "$PARAM_FILE")
+          az group create \
+            --name "$TARGET_RG" \
+            --location "$LOCATION"
+
+      # 2.4 Task: "Validate" => Re-check template before deploy
+      # SOC2: CC3.2, CC5.2 (Pre-deployment validation)
+      - name: Validate deployment
+        run: |
+          az deployment group validate \
+            --resource-group "$TARGET_RG" \
+            --template-file "$TEMPLATE_FILE" \
+            --parameters @"$PARAM_FILE"
+
+      # 2.5 Task: "What-if" => Final preview before deployment
+      # SOC2: CC3.2, CC4.1 (Change impact analysis + monitoring input)
+      - name: What-if preview
+        run: |
+          az deployment group what-if \
+            --resource-group "$TARGET_RG" \
+            --template-file "$TEMPLATE_FILE" \
+            --parameters @"$PARAM_FILE" \
+            --no-pretty-print \
+            --output json > whatif.json
+
+          echo "Change preview"
+          jq -r '.changes[]? | "\(.changeType): \(.resourceId)"' whatif.json
+
+      # 2.6 Task: "Deploy" => Apply infrastructure
+      # SOC2: CC5.2, CC8.1 (Controlled change execution)
+      - name: Pre-deploy checkpoint
+        run: echo "Validation and what-if completed successfully"
+
+      # 2.7 Task: "Manual approval" => Control production changes
+      # SOC2: CC1.2, CC8.1 (Governance + change authorization)
+      # Configured via GitHub Environments approval rules
+
+      # 2.8 Task: "Deploy" => Apply infrastructure
+      # SOC2: CC5.2, CC8.1 (Change execution control)
+      - name: Deploy infrastructure
+        run: |
+          az deployment group create \
+            --resource-group "$TARGET_RG" \
+            --template-file "$TEMPLATE_FILE" \
+            --parameters @"$PARAM_FILE"
+
+      # ------------------------------------------------------------
+      # Planned next steps (next iterations of the pipeline)
+      #
+      # 2.9 Idempotency check => Ensure no drift after deploy
+      # SOC2: CC5.2, CC8.1 (Change consistency + post-deploy validation)
+      #
+      # 2.10 Audit logging => Track who/when/what deployed
+      # SOC2: CC2.3, CC4.2 (Audit trail + monitoring)
+      #
+      # 2.11 Access scope validation => Validate least privilege
+      # SOC2: CC6.1, CC6.2, CC6.3 (Access control + least privilege)
+      #
+      # 2.12 RG existence / scope check => Ensure target RG exists and is the intended scope
+      # SOC2: CC3.2, CC5.1 (Scope validation + misdeployment prevention)
+      #
+      # 2.13 Rollback plan => Define and prepare rollback path before apply
+      # SOC2: CC8.1, CC9.1 (Change recovery + resilience planning)
+      #
+      # 2.14 Sizing sanity => Validate CPU / Memory / VM size / SKU compatibility
+      # SOC2: CC3.2, CC5.2 (Configuration validation)
+      #
+      # 2.15 Deployment report => Generate audit-ready deployment summary
+      # SOC2: CC2.3, CC4.2 (Audit + reporting)
+      # ------------------------------------------------------------
