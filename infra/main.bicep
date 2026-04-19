@@ -26,6 +26,8 @@ param adminPassword string
 
 param vmSize string = 'Standard_NV4as_v4'
 
+param appGwName string = 'appgw-${environment}'
+
 param sqlServerName string = 'neverov-sql-${environment}'
 param dbName string = 'appdb'
 
@@ -116,6 +118,21 @@ module sql './modules/sql.bicep' = {
   ]
 }
 
+module appGw './modules/app_gateway.bicep' = {
+  name: 'appgw-${environment}'
+  params: {
+    location: location
+    appGwName: appGwName
+    gatewaySubnetId: network.outputs.gatewaySubnetId
+    publicIpId: publicIp.outputs.publicIpId
+    backendNicId: nic.outputs.nicId
+  }
+  dependsOn: [
+    vm
+  ]
+}
+
+
 output vnetId string = network.outputs.vnetId
 output webSubnetId string = network.outputs.webSubnetId
 output dbSubnetId string = network.outputs.dbSubnetId
@@ -128,3 +145,5 @@ output vmId string = vm.outputs.vmId
 
 output sqlServerName string = sql.outputs.sqlServerName
 output sqlDbName string = sql.outputs.sqlDbName
+
+output appGwId string = appGw.outputs.appGwId
