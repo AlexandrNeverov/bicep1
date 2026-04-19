@@ -25,7 +25,7 @@ The architecture is designed to be extendable and serves as a baseline for furth
 ## Architecture
 
 <p align="center">
-  <img src="arch.png" width="900">
+  <img src="arch.jpg" width="900">
 </p>
 <p align="center">
   <i>Figure 1: Infrastructure Architecture with Future Extensions</i>
